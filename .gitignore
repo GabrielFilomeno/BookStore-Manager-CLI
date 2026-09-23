@@ -1,0 +1,11 @@
+# Dependências
+node_modules/
+
+# Build e saída de compilação
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Variáveis de ambiente e segredos
+.env
