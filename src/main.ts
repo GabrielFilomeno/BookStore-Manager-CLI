@@ -1,5 +1,6 @@
 import * as readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
+import { connectDatabase, pool } from './infra/database.js';
 
 enum MenuOption {
   AUTHORS = '1',
@@ -29,6 +30,17 @@ async function waitForKeyPress(terminal: readline.Interface): Promise<void> {
 }
 
 async function main(): Promise<void> {
+  try {
+    await connectDatabase();
+  } catch (error) {
+    console.error('\nErro ao conectar ao banco de dados PostgreSQL.');
+    console.error('Verifique se o PostgreSQL está em execução e se as variáveis no arquivo .env estão corretas.');
+    if (error instanceof Error) {
+      console.error(`Detalhes: ${error.message}\n`);
+    }
+    process.exit(1);
+  }
+
   const terminal = readline.createInterface({ input, output });
   let isRunning = true;
 
@@ -81,6 +93,7 @@ async function main(): Promise<void> {
     }
   } finally {
     terminal.close();
+    await pool.end();
   }
 }
 
