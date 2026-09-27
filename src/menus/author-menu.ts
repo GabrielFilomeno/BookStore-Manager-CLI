@@ -58,8 +58,7 @@ export async function authorMenu(terminal: readline.Interface): Promise<void> {
         break;
 
       case AuthorMenuOption.UPDATE:
-        // TODO: Atualizar Autores (A fazer)
-        console.log('\n[TODO] Atualização de Autores - A fazer.');
+        await authorController.update(terminal);
         await waitForKeyPress(terminal);
         break;
 

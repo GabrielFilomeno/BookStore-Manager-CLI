@@ -70,4 +70,30 @@ export class AuthorController {
       }
     }
   }
+
+  public async update(terminal: readline.Interface): Promise<void> {
+    console.log('\n--- ATUALIZAR AUTOR ---');
+    const id = (await terminal.question('Informe o ID do autor: ')).trim();
+
+    if (!id) {
+      console.log('\nID não pode ser vazio.');
+      return;
+    }
+
+    const newName = await terminal.question('Informe o novo nome do autor: ');
+
+    try {
+      const author = await this.authorService.updateAuthor(id, newName);
+      console.log('\nAutor atualizado com sucesso!');
+      console.log(`ID: ${author.id}`);
+      console.log(`Novo Nome: ${author.name}`);
+      console.log(`Atualizado em: ${author.updatedAt.toLocaleString('pt-BR')}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`\nErro ao atualizar autor: ${error.message}`);
+      } else {
+        console.error('\nErro desconhecido ao atualizar autor.');
+      }
+    }
+  }
 }

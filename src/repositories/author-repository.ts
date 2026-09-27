@@ -38,4 +38,13 @@ export class AuthorRepository {
 
     return AuthorMapper.toEntity(model);
   }
+
+  public async update(author: Author): Promise<void> {
+    const query = `
+      UPDATE authors
+      SET name = $1, updated_at = $2
+      WHERE id = $3
+    `;
+    await pool.query(query, [author.name, author.updatedAt, author.id]);
+  }
 }

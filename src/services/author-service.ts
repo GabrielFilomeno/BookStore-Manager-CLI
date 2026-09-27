@@ -34,4 +34,19 @@ export class AuthorService {
 
     return author;
   }
+
+  public async updateAuthor(id: string, name: string): Promise<Author> {
+    if (!name) {
+      throw new InvalidNameError('O novo nome do autor não pode ser vazio.');
+    }
+
+    if (name.length < 2) {
+      throw new InvalidNameError('O nome do autor deve conter pelo menos 2 caracteres.');
+    }
+
+    const author = await this.getAuthorById(id);
+    author.updateName(name);
+    await this.authorRepository.update(author);
+    return author;
+  }
 }
