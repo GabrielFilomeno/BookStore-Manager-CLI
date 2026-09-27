@@ -22,4 +22,20 @@ export class AuthorRepository {
     const result = await pool.query<AuthorModel>(query);
     return result.rows.map((model) => AuthorMapper.toEntity(model));
   }
+
+  public async findById(id: string): Promise<Author | null> {
+    const query = `
+      SELECT id, name, created_at, updated_at
+      FROM authors
+      WHERE id = $1
+    `;
+    const result = await pool.query<AuthorModel>(query, [id]);
+    const model = result.rows[0];
+
+    if (!model) {
+      return null;
+    }
+
+    return AuthorMapper.toEntity(model);
+  }
 }

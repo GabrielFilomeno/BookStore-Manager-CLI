@@ -53,8 +53,7 @@ export async function authorMenu(terminal: readline.Interface): Promise<void> {
         break;
 
       case AuthorMenuOption.GET:
-        // TODO: Buscar Autores (A fazer)
-        console.log('\n[TODO] Busca de Autores - A fazer.');
+        await authorController.getById(terminal);
         await waitForKeyPress(terminal);
         break;
 

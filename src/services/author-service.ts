@@ -1,6 +1,7 @@
 import { Author } from '../entities/author.js';
 import { AuthorRepository } from '../repositories/author-repository.js';
 import { InvalidNameError } from '../shared/errors/invalid-name.error.js';
+import { NotFoundError } from '../shared/errors/not-found.error.js';
 
 
 export class AuthorService {
@@ -22,5 +23,15 @@ export class AuthorService {
 
   public async listAuthors(): Promise<Author[]> {
     return this.authorRepository.findAll();
+  }
+
+  public async getAuthorById(id: string): Promise<Author> {
+    const author = await this.authorRepository.findById(id);
+
+    if (!author) {
+      throw new NotFoundError(`Autor com ID "${id}" não foi encontrado.`);
+    }
+
+    return author;
   }
 }

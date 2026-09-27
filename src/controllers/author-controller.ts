@@ -50,4 +50,24 @@ export class AuthorController {
       }
     }
   }
+
+  public async getById(terminal: readline.Interface): Promise<void> {
+    console.log('\n--- BUSCAR AUTOR POR ID ---');
+    const id = await terminal.question('Informe o ID do autor: ');
+
+    try {
+      const author = await this.authorService.getAuthorById(id);
+      console.log('\nAutor encontrado com sucesso!');
+      console.log(`ID: ${author.id}`);
+      console.log(`Nome: ${author.name}`);
+      console.log(`Criado em: ${author.createdAt.toLocaleString('pt-BR')}`);
+      console.log(`Atualizado em: ${author.updatedAt.toLocaleString('pt-BR')}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`\nErro ao buscar autor: ${error.message}`);
+      } else {
+        console.error('\nErro desconhecido ao buscar autor.');
+      }
+    }
+  }
 }
