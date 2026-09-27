@@ -63,8 +63,7 @@ export async function authorMenu(terminal: readline.Interface): Promise<void> {
         break;
 
       case AuthorMenuOption.DELETE:
-        // TODO: Excluir Autores (A fazer)
-        console.log('\n[TODO] Exclusão de Autores - A fazer.');
+        await authorController.delete(terminal);
         await waitForKeyPress(terminal);
         break;
 

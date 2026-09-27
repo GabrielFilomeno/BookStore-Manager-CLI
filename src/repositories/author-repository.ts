@@ -47,4 +47,9 @@ export class AuthorRepository {
     `;
     await pool.query(query, [author.name, author.updatedAt, author.id]);
   }
+
+  public async delete(id: string): Promise<void> {
+    const query = `DELETE FROM authors WHERE id = $1`;
+    await pool.query(query, [id]);
+  }
 }

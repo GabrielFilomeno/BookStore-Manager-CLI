@@ -96,4 +96,34 @@ export class AuthorController {
       }
     }
   }
+
+  public async delete(terminal: readline.Interface): Promise<void> {
+    console.log('\n--- EXCLUIR AUTOR ---');
+    const id = (await terminal.question('Informe o ID do autor que deseja excluir: ')).trim();
+
+    if (!id) {
+      console.log('\nID não pode ser vazio.');
+      return;
+    }
+
+    const confirmation = (
+      await terminal.question(`Tem certeza que deseja excluir o autor com ID "${id}"? (s/N): `)
+    ).trim().toLowerCase();
+
+    if (confirmation !== 's' && confirmation !== 'sim') {
+      console.log('\nOperação cancelada.');
+      return;
+    }
+
+    try {
+      await this.authorService.deleteAuthor(id);
+      console.log('\nAutor excluído com sucesso!');
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`\nErro ao excluir autor: ${error.message}`);
+      } else {
+        console.error('\nErro desconhecido ao excluir autor.');
+      }
+    }
+  }
 }
