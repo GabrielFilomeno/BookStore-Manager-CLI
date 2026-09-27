@@ -5,7 +5,7 @@
   "main": "dist/main.js",
   "scripts": {
     "dev": "tsx src/main.ts",
-    "db:setup": "tsx src/infra/setupDatabase.ts",
+    "db:setup": "tsx src/infra/setup-database.ts",
     "build": "tsc",
     "start": "node dist/main.js"
   },

@@ -1,6 +1,7 @@
 import * as readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
 import { connectDatabase, pool } from './infra/database.js';
+import { authorMenu } from './menus/author-menu.js';
 
 enum MenuOption {
   AUTHORS = '1',
@@ -51,9 +52,7 @@ async function main(): Promise<void> {
 
       switch (choice) {
         case MenuOption.AUTHORS:
-          // TODO: Chamar AuthorController (A fazer)
-          console.log('\n[TODO] Gerenciamento de Autores - A fazer.');
-          await waitForKeyPress(terminal);
+          await authorMenu(terminal);
           break;
 
         case MenuOption.BOOKS:
