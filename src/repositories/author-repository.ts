@@ -12,4 +12,14 @@ export class AuthorRepository {
     const values = [author.id, author.name, author.createdAt, author.updatedAt];
     await pool.query(query, values);
   }
+
+  public async findAll(): Promise<Author[]> {
+    const query = `
+      SELECT id, name, created_at, updated_at
+      FROM authors
+      ORDER BY name ASC
+    `;
+    const result = await pool.query<AuthorModel>(query);
+    return result.rows.map((model) => AuthorMapper.toEntity(model));
+  }
 }
