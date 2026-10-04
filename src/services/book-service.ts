@@ -72,4 +72,18 @@ export class BookService {
   public async listBooks(): Promise<Book[]> {
     return this.bookRepository.findAll();
   }
+
+  public async getBookById(id: string): Promise<Book> {
+    if (!id || id.trim().length === 0) {
+      throw new InvalidParamError('O ID do livro é obrigatório.', 'id');
+    }
+
+    const book = await this.bookRepository.findById(id.trim());
+
+    if (!book) {
+      throw new NotFoundError(`Livro com ID "${id}" não foi encontrado.`);
+    }
+
+    return book;
+  }
 }

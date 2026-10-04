@@ -75,6 +75,31 @@ export class BookController {
     }
   }
 
+  public async getById(terminal: readline.Interface): Promise<void> {
+    console.log('\n--- BUSCAR LIVRO POR ID ---');
+    const id = (await terminal.question('Informe o ID do livro: ')).trim();
+
+    try {
+      const book = await this.bookService.getBookById(id);
+      console.log('\nLivro encontrado com sucesso!');
+      console.log(`ID: ${book.id}`);
+      console.log(`Título: ${book.title}`);
+      console.log(`Gênero: ${book.genre}`);
+      console.log(`ID do Autor: ${book.authorId}`);
+      console.log(`Data de Lançamento: ${book.releaseDate.toLocaleDateString('pt-BR')}`);
+      console.log(`Quantidade Total: ${book.total_quantity}`);
+      console.log(`Quantidade Disponível: ${book.available_quantity}`);
+      console.log(`Criado em: ${book.createdAt.toLocaleString('pt-BR')}`);
+      console.log(`Atualizado em: ${book.updatedAt.toLocaleString('pt-BR')}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`\nErro ao buscar livro: ${error.message}`);
+      } else {
+        console.error('\nErro desconhecido ao buscar livro.');
+      }
+    }
+  }
+
   private parseDate(dateStr: string): Date {
     const [day, month, year] = dateStr.split('/').map(Number);
 

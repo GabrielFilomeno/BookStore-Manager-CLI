@@ -33,4 +33,21 @@ export class BookRepository {
     const result = await pool.query<BookModel>(query);
     return result.rows.map((model) => BookMapper.toEntity(model));
   }
+
+  
+  public async findById(id: string): Promise<Book | null> {
+    const query = `
+      SELECT id, author_id, title, genre, release_date, total_quantity, available_quantity, created_at, updated_at
+      FROM books
+      WHERE id = $1
+    `;
+    const result = await pool.query<BookModel>(query, [id]);
+    const model = result.rows[0];
+
+    if (!model) {
+      return null;
+    }
+
+    return BookMapper.toEntity(model);
+  }
 }
