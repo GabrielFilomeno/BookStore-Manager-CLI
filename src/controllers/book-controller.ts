@@ -1,0 +1,62 @@
+import type * as readline from 'node:readline/promises';
+import { BookService } from '../services/book-service.js';
+import { InvalidParamError } from '../shared/errors/invalid-param.error.js';
+
+export class BookController {
+  constructor(private readonly bookService: BookService) {}
+
+  public async register(terminal: readline.Interface): Promise<void> {
+    console.log('\n--- CADASTRO DE LIVRO ---');
+
+    const title = (await terminal.question('Informe o título do livro: ')).trim();
+    const genre = (await terminal.question('Informe o gênero do livro: ')).trim();
+    const authorId = (await terminal.question('Informe o ID do autor: ')).trim();
+    const releaseDateStr = (await terminal.question('Informe a data de lançamento (DD/MM/AAAA): ')).trim();
+    const totalQuantityStr = (await terminal.question('Informe a quantidade total de exemplares: ')).trim();
+
+    try {
+      const releaseDate = this.parseDate(releaseDateStr);
+      const total_quantity = Number.parseInt(totalQuantityStr, 10);
+
+      const book = await this.bookService.createBook({
+        title,
+        genre,
+        authorId,
+        releaseDate,
+        total_quantity,
+      });
+
+      console.log('\nLivro cadastrado com sucesso!');
+      console.log(`ID: ${book.id}`);
+      console.log(`Título: ${book.title}`);
+      console.log(`Gênero: ${book.genre}`);
+      console.log(`ID do Autor: ${book.authorId}`);
+      console.log(`Data de Lançamento: ${book.releaseDate.toLocaleDateString('pt-BR')}`);
+      console.log(`Quantidade Total: ${book.total_quantity}`);
+      console.log(`Quantidade Disponível: ${book.available_quantity}`);
+      console.log(`Criado em: ${book.createdAt.toLocaleString('pt-BR')}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`\nErro ao cadastrar livro: ${error.message}`);
+      } else {
+        console.error('\nErro desconhecido ao cadastrar livro.');
+      }
+    }
+  }
+
+  private parseDate(dateStr: string): Date {
+    const [day, month, year] = dateStr.split('/').map(Number);
+
+    if(!day || !month || !year){
+      throw new InvalidParamError('Data inválida', 'Data de Lançamento');
+    }
+
+    const date = new Date(year, month - 1, day);
+
+    if (date >= new Date()) {
+      throw new InvalidParamError('Data inválida', 'Data de Lançamento');
+    }
+
+    return date;
+  }
+}
