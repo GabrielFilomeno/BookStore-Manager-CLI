@@ -6,7 +6,8 @@ import { BookController } from '../controllers/book-controller.js';
 
 enum BookMenuOption {
   REGISTER = '1',
-  BACK = '2',
+  LIST = '2',
+  BACK = '3',
 }
 
 const bookRepository = new BookRepository();
@@ -20,7 +21,8 @@ function displayBookMenu(): void {
   console.log('           GERENCIAR LIVROS             ');
   console.log('========================================');
   console.log('1. Cadastrar livro');
-  console.log('2. Voltar ao menu principal');
+  console.log('2. Listar livros');
+  console.log('3. Voltar ao menu principal');
   console.log('========================================');
 }
 
@@ -41,12 +43,17 @@ export async function bookMenu(terminal: readline.Interface): Promise<void> {
         await waitForKeyPress(terminal);
         break;
 
+      case BookMenuOption.LIST:
+        await bookController.list();
+        await waitForKeyPress(terminal);
+        break;
+
       case BookMenuOption.BACK:
         isRunning = false;
         break;
 
       default:
-        console.log('\nOpção inválida! Escolha 1 ou 2.');
+        console.log('\nOpção inválida! Escolha um número entre 1 e 3.');
         await waitForKeyPress(terminal);
         break;
     }

@@ -68,4 +68,8 @@ export class BookService {
     await this.bookRepository.create(book);
     return book;
   }
+
+  public async listBooks(): Promise<Book[]> {
+    return this.bookRepository.findAll();
+  }
 }

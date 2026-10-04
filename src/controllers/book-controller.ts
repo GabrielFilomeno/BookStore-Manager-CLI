@@ -44,6 +44,37 @@ export class BookController {
     }
   }
 
+  public async list(): Promise<void> {
+    console.log('\n--- LISTA DE LIVROS ---');
+
+    try {
+      const books = await this.bookService.listBooks();
+
+      if (books.length === 0) {
+        console.log('Nenhum livro cadastrado até o momento.');
+        return;
+      }
+
+      console.table(
+        books.map((book) => ({
+          ID: book.id,
+          Título: book.title,
+          Gênero: book.genre,
+          'ID Autor': book.authorId,
+          Lançamento: book.releaseDate.toLocaleDateString('pt-BR'),
+          Total: book.total_quantity,
+          Disponível: book.available_quantity,
+        }))
+      );
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`\nErro ao listar livros: ${error.message}`);
+      } else {
+        console.error('\nErro desconhecido ao listar livros.');
+      }
+    }
+  }
+
   private parseDate(dateStr: string): Date {
     const [day, month, year] = dateStr.split('/').map(Number);
 

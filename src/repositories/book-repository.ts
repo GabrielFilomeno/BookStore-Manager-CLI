@@ -22,4 +22,15 @@ export class BookRepository {
     ];
     await pool.query(query, values);
   }
+
+  
+  public async findAll(): Promise<Book[]> {
+    const query = `
+      SELECT id, author_id, title, genre, release_date, total_quantity, available_quantity, created_at, updated_at
+      FROM books
+      ORDER BY title ASC
+    `;
+    const result = await pool.query<BookModel>(query);
+    return result.rows.map((model) => BookMapper.toEntity(model));
+  }
 }
