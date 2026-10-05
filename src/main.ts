@@ -2,6 +2,7 @@ import * as readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
 import { connectDatabase, pool } from './infra/database.js';
 import { authorMenu } from './menus/author-menu.js';
+import { bookMenu } from './menus/book-menu.js';
 
 enum MenuOption {
   AUTHORS = '1',
@@ -56,9 +57,7 @@ async function main(): Promise<void> {
           break;
 
         case MenuOption.BOOKS:
-          // TODO: Chamar BookController (A fazer)
-          console.log('\n[TODO] Gerenciamento de Livros - A fazer.');
-          await waitForKeyPress(terminal);
+          await bookMenu(terminal);
           break;
 
         case MenuOption.CLIENTS:
