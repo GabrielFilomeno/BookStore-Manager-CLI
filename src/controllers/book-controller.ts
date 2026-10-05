@@ -162,6 +162,36 @@ export class BookController {
     }
   }
 
+  public async delete(terminal: readline.Interface): Promise<void> {
+    console.log('\n--- REMOVER LIVRO ---');
+    const id = (await terminal.question('Informe o ID do livro a ser removido: ')).trim();
+
+    if (!id) {
+      console.log('\nID não pode ser vazio.');
+      return;
+    }
+
+    try {
+      const existingBook = await this.bookService.getBookById(id);
+      const confirm = (
+        await terminal.question(`Tem certeza que deseja remover o livro "${existingBook.title}"? (s/N): `)
+      ).trim().toLowerCase();
+
+      if (confirm === 's' || confirm === 'sim') {
+        await this.bookService.deleteBook(id);
+        console.log('\nLivro removido com sucesso!');
+      } else {
+        console.log('\nOperação cancelada.');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`\nErro ao remover livro: ${error.message}`);
+      } else {
+        console.error('\nErro desconhecido ao remover livro.');
+      }
+    }
+  }
+
   private parseDate(dateStr: string): Date {
     const [day, month, year] = dateStr.split('/').map(Number);
 

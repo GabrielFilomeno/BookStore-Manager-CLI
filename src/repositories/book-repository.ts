@@ -70,4 +70,12 @@ export class BookRepository {
       book.id,
     ]);
   }
+
+  public async delete(id: string): Promise<void> {
+    const query = `
+      DELETE FROM books
+      WHERE id = $1
+    `;
+    await pool.query(query, [id]);
+  }
 }
