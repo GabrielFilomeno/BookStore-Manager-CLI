@@ -8,7 +8,8 @@ enum BookMenuOption {
   REGISTER = '1',
   LIST = '2',
   GET = '3',
-  BACK = '4',
+  UPDATE = '4',
+  BACK = '5',
 }
 
 const bookRepository = new BookRepository();
@@ -24,7 +25,8 @@ function displayBookMenu(): void {
   console.log('1. Cadastrar livro');
   console.log('2. Listar livros');
   console.log('3. Buscar livro por ID');
-  console.log('4. Voltar ao menu principal');
+  console.log('4. Atualizar livro');
+  console.log('5. Voltar ao menu principal');
   console.log('========================================');
 }
 
@@ -55,12 +57,17 @@ export async function bookMenu(terminal: readline.Interface): Promise<void> {
         await waitForKeyPress(terminal);
         break;
 
+      case BookMenuOption.UPDATE:
+        await bookController.update(terminal);
+        await waitForKeyPress(terminal);
+        break;
+
       case BookMenuOption.BACK:
         isRunning = false;
         break;
 
       default:
-        console.log('\nOpção inválida! Escolha um número entre 1 e 4.');
+        console.log('\nOpção inválida! Escolha um número entre 1 e 5.');
         await waitForKeyPress(terminal);
         break;
     }

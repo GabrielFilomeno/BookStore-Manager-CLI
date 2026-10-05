@@ -50,4 +50,22 @@ export class BookRepository {
 
     return BookMapper.toEntity(model);
   }
+
+  public async update(book: Book): Promise<void> {
+    const query = `
+      UPDATE books
+      SET author_id = $1, title = $2, genre = $3, release_date = $4, total_quantity = $5, available_quantity = $6, updated_at = $7
+      WHERE id = $8
+    `;
+    await pool.query(query, [
+      book.authorId,
+      book.title,
+      book.genre,
+      book.releaseDate,
+      book.total_quantity,
+      book.available_quantity,
+      book.updatedAt,
+      book.id,
+    ]);
+  }
 }

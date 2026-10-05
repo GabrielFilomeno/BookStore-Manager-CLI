@@ -13,6 +13,15 @@ export interface CreateBookDTO {
   available_quantity?: number;
 }
 
+export interface UpdateBookDTO {
+  authorId?: string | undefined;
+  title?: string | undefined;
+  genre?: string | undefined;
+  releaseDate?: Date | undefined;
+  total_quantity?: number | undefined;
+  available_quantity?: number | undefined;
+}
+
 export class BookService {
   constructor(
     private readonly bookRepository: BookRepository,
@@ -84,6 +93,59 @@ export class BookService {
       throw new NotFoundError(`Livro com ID "${id}" não foi encontrado.`);
     }
 
+    return book;
+  }
+
+  public async updateBook(id: string, data: UpdateBookDTO): Promise<Book> {
+    const book = await this.getBookById(id);
+
+    if (data.title !== undefined) {
+      if (data.title.trim().length === 0) {
+        throw new InvalidParamError('O título do livro não pode ser vazio.', 'title');
+      }
+      book.updateTitle(data.title.trim());
+    }
+
+    if (data.genre !== undefined) {
+      if (data.genre.trim().length === 0) {
+        throw new InvalidParamError('O gênero do livro não pode ser vazio.', 'genre');
+      }
+      book.updateGenre(data.genre.trim());
+    }
+
+    if (data.authorId !== undefined) {
+      if (data.authorId.trim().length === 0) {
+        throw new InvalidParamError('O ID do autor não pode ser vazio.', 'authorId');
+      }
+      const author = await this.authorRepository.findById(data.authorId.trim());
+      if (!author) {
+        throw new NotFoundError(`Autor com ID "${data.authorId}" não foi encontrado.`);
+      }
+      book.updateAuthorId(data.authorId.trim());
+    }
+
+    if (data.releaseDate !== undefined) {
+      if (isNaN(data.releaseDate.getTime())) {
+        throw new InvalidParamError('A data de lançamento é inválida.', 'releaseDate');
+      }
+      book.updateReleaseDate(data.releaseDate);
+    }
+
+    if (data.total_quantity !== undefined) {
+      if (isNaN(data.total_quantity) || data.total_quantity < 0) {
+        throw new InvalidParamError('A quantidade total deve ser um número maior ou igual a 0.', 'total_quantity');
+      }
+      book.setTotalQuantity(data.total_quantity);
+    }
+
+    if (data.available_quantity !== undefined) {
+      if (isNaN(data.available_quantity) || data.available_quantity < 0 || data.available_quantity > book.total_quantity) {
+        throw new InvalidParamError('A quantidade disponível deve estar entre 0 e a quantidade total.', 'available_quantity');
+      }
+      book.setAvailableQuantity(data.available_quantity);
+    }
+
+    await this.bookRepository.update(book);
     return book;
   }
 }

@@ -100,6 +100,58 @@ export class BookController {
     }
   }
 
+  public async update(terminal: readline.Interface): Promise<void> {
+    console.log('\n--- ATUALIZAR LIVRO ---');
+    const id = (await terminal.question('Informe o ID do livro: ')).trim();
+
+    if (!id) {
+      console.log('\nID não pode ser vazio.');
+      return;
+    }
+
+    try {
+      const existingBook = await this.bookService.getBookById(id);
+      console.log(`\nLivro atual: "${existingBook.title}" (Autor ID: ${existingBook.authorId})`);
+      console.log('Pressione Enter em qualquer campo para manter o valor atual.\n');
+
+      const titleInput = (await terminal.question(`Novo título [${existingBook.title}]: `)).trim();
+      const genreInput = (await terminal.question(`Novo gênero [${existingBook.genre}]: `)).trim();
+      const authorIdInput = (await terminal.question(`Novo ID do autor [${existingBook.authorId}]: `)).trim();
+      const releaseDateInput = (await terminal.question(`Nova data de lançamento (DD/MM/AAAA) [${existingBook.releaseDate.toLocaleDateString('pt-BR')}]: `)).trim();
+      const totalQuantityInput = (await terminal.question(`Nova quantidade total [${existingBook.total_quantity}]: `)).trim();
+
+      const title = titleInput.length > 0 ? titleInput : undefined;
+      const genre = genreInput.length > 0 ? genreInput : undefined;
+      const authorId = authorIdInput.length > 0 ? authorIdInput : undefined;
+      const releaseDate = releaseDateInput.length > 0 ? this.parseDate(releaseDateInput) : undefined;
+      const total_quantity = totalQuantityInput.length > 0 ? Number.parseInt(totalQuantityInput, 10) : undefined;
+
+      const updatedBook = await this.bookService.updateBook(id, {
+        authorId,
+        title,
+        genre,
+        releaseDate,
+        total_quantity,
+      });
+
+      console.log('\nLivro atualizado com sucesso!');
+      console.log(`ID: ${updatedBook.id}`);
+      console.log(`Título: ${updatedBook.title}`);
+      console.log(`Gênero: ${updatedBook.genre}`);
+      console.log(`ID do Autor: ${updatedBook.authorId}`);
+      console.log(`Data de Lançamento: ${updatedBook.releaseDate.toLocaleDateString('pt-BR')}`);
+      console.log(`Quantidade Total: ${updatedBook.total_quantity}`);
+      console.log(`Quantidade Disponível: ${updatedBook.available_quantity}`);
+      console.log(`Atualizado em: ${updatedBook.updatedAt.toLocaleString('pt-BR')}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`\nErro ao atualizar livro: ${error.message}`);
+      } else {
+        console.error('\nErro desconhecido ao atualizar livro.');
+      }
+    }
+  }
+
   private parseDate(dateStr: string): Date {
     const [day, month, year] = dateStr.split('/').map(Number);
 
