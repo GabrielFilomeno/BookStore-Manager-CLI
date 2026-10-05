@@ -4,6 +4,7 @@ import { connectDatabase, pool } from './infra/database.js';
 import { authorMenu } from './menus/author-menu.js';
 import { bookMenu } from './menus/book-menu.js';
 import { clientMenu } from './menus/client-menu.js';
+import { loanMenu } from './menus/loan-menu.js';
 
 enum MenuOption {
   AUTHORS = '1',
@@ -66,9 +67,7 @@ async function main(): Promise<void> {
           break;
 
         case MenuOption.LOANS:
-          // TODO: Chamar LoanController (A fazer)
-          console.log('\n[TODO] Gerenciamento de Empréstimos - A fazer.');
-          await waitForKeyPress(terminal);
+          await loanMenu(terminal);
           break;
 
         case MenuOption.REPORTS:
