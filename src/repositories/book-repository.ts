@@ -6,14 +6,15 @@ import type { BookModel } from '../models/book-model.js';
 export class BookRepository {
   public async create(book: Book): Promise<void> {
     const query = `
-      INSERT INTO books (id, author_id, title, genre, release_date, total_quantity, available_quantity, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      INSERT INTO books (id, author_id, title, genre, description, release_date, total_quantity, available_quantity, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     `;
     const values = [
       book.id,
       book.authorId,
       book.title,
       book.genre,
+      book.description ?? null,
       book.releaseDate,
       book.total_quantity,
       book.available_quantity,
@@ -26,7 +27,7 @@ export class BookRepository {
   
   public async findAll(): Promise<Book[]> {
     const query = `
-      SELECT id, author_id, title, genre, release_date, total_quantity, available_quantity, created_at, updated_at
+      SELECT id, author_id, title, genre, description, release_date, total_quantity, available_quantity, created_at, updated_at
       FROM books
       ORDER BY title ASC
     `;
@@ -37,7 +38,7 @@ export class BookRepository {
   
   public async findById(id: string): Promise<Book | null> {
     const query = `
-      SELECT id, author_id, title, genre, release_date, total_quantity, available_quantity, created_at, updated_at
+      SELECT id, author_id, title, genre, description, release_date, total_quantity, available_quantity, created_at, updated_at
       FROM books
       WHERE id = $1
     `;
@@ -54,13 +55,14 @@ export class BookRepository {
   public async update(book: Book): Promise<void> {
     const query = `
       UPDATE books
-      SET author_id = $1, title = $2, genre = $3, release_date = $4, total_quantity = $5, available_quantity = $6, updated_at = $7
-      WHERE id = $8
+      SET author_id = $1, title = $2, genre = $3, description = $4, release_date = $5, total_quantity = $6, available_quantity = $7, updated_at = $8
+      WHERE id = $9
     `;
     await pool.query(query, [
       book.authorId,
       book.title,
       book.genre,
+      book.description ?? null,
       book.releaseDate,
       book.total_quantity,
       book.available_quantity,

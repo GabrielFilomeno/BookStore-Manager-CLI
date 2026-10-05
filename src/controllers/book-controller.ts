@@ -10,6 +10,7 @@ export class BookController {
 
     const title = (await terminal.question('Informe o título do livro: ')).trim();
     const genre = (await terminal.question('Informe o gênero do livro: ')).trim();
+    const descriptionInput = (await terminal.question('Informe a descrição do livro (opcional): ')).trim();
     const authorId = (await terminal.question('Informe o ID do autor: ')).trim();
     const releaseDateStr = (await terminal.question('Informe a data de lançamento (DD/MM/AAAA): ')).trim();
     const totalQuantityStr = (await terminal.question('Informe a quantidade total de exemplares: ')).trim();
@@ -17,10 +18,12 @@ export class BookController {
     try {
       const releaseDate = this.parseDate(releaseDateStr);
       const total_quantity = Number.parseInt(totalQuantityStr, 10);
+      const description = descriptionInput.length > 0 ? descriptionInput : null;
 
       const book = await this.bookService.createBook({
         title,
         genre,
+        description,
         authorId,
         releaseDate,
         total_quantity,
@@ -30,6 +33,7 @@ export class BookController {
       console.log(`ID: ${book.id}`);
       console.log(`Título: ${book.title}`);
       console.log(`Gênero: ${book.genre}`);
+      console.log(`Descrição: ${book.description ?? 'N/A'}`);
       console.log(`ID do Autor: ${book.authorId}`);
       console.log(`Data de Lançamento: ${book.releaseDate.toLocaleDateString('pt-BR')}`);
       console.log(`Quantidade Total: ${book.total_quantity}`);
@@ -60,6 +64,7 @@ export class BookController {
           ID: book.id,
           Título: book.title,
           Gênero: book.genre,
+          Descrição: book.description ?? 'N/A',
           'ID Autor': book.authorId,
           Lançamento: book.releaseDate.toLocaleDateString('pt-BR'),
           Total: book.total_quantity,
@@ -85,6 +90,7 @@ export class BookController {
       console.log(`ID: ${book.id}`);
       console.log(`Título: ${book.title}`);
       console.log(`Gênero: ${book.genre}`);
+      console.log(`Descrição: ${book.description ?? 'N/A'}`);
       console.log(`ID do Autor: ${book.authorId}`);
       console.log(`Data de Lançamento: ${book.releaseDate.toLocaleDateString('pt-BR')}`);
       console.log(`Quantidade Total: ${book.total_quantity}`);
@@ -116,12 +122,14 @@ export class BookController {
 
       const titleInput = (await terminal.question(`Novo título [${existingBook.title}]: `)).trim();
       const genreInput = (await terminal.question(`Novo gênero [${existingBook.genre}]: `)).trim();
+      const descriptionInput = (await terminal.question(`Nova descrição [${existingBook.description ?? ''}]: `)).trim();
       const authorIdInput = (await terminal.question(`Novo ID do autor [${existingBook.authorId}]: `)).trim();
       const releaseDateInput = (await terminal.question(`Nova data de lançamento (DD/MM/AAAA) [${existingBook.releaseDate.toLocaleDateString('pt-BR')}]: `)).trim();
       const totalQuantityInput = (await terminal.question(`Nova quantidade total [${existingBook.total_quantity}]: `)).trim();
 
       const title = titleInput.length > 0 ? titleInput : undefined;
       const genre = genreInput.length > 0 ? genreInput : undefined;
+      const description = descriptionInput.length > 0 ? descriptionInput : null;
       const authorId = authorIdInput.length > 0 ? authorIdInput : undefined;
       const releaseDate = releaseDateInput.length > 0 ? this.parseDate(releaseDateInput) : undefined;
       const total_quantity = totalQuantityInput.length > 0 ? Number.parseInt(totalQuantityInput, 10) : undefined;
@@ -130,6 +138,7 @@ export class BookController {
         authorId,
         title,
         genre,
+        description,
         releaseDate,
         total_quantity,
       });
@@ -138,6 +147,7 @@ export class BookController {
       console.log(`ID: ${updatedBook.id}`);
       console.log(`Título: ${updatedBook.title}`);
       console.log(`Gênero: ${updatedBook.genre}`);
+      console.log(`Descrição: ${updatedBook.description ?? 'N/A'}`);
       console.log(`ID do Autor: ${updatedBook.authorId}`);
       console.log(`Data de Lançamento: ${updatedBook.releaseDate.toLocaleDateString('pt-BR')}`);
       console.log(`Quantidade Total: ${updatedBook.total_quantity}`);

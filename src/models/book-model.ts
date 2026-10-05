@@ -3,6 +3,7 @@ export interface BookModel {
   author_id: string;
   title: string;
   genre: string;
+  description?: string | null;
   release_date: Date;
   total_quantity: number;
   available_quantity: number;

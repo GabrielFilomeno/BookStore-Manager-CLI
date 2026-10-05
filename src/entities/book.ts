@@ -4,6 +4,7 @@ export interface BookProps {
   authorId: string;
   title: string;
   genre: string;
+  description?: string | null;
   releaseDate: Date;
   total_quantity: number;
   available_quantity: number;
@@ -15,6 +16,7 @@ export class Book {
   private _authorId: string;
   private _title: string;
   private _genre: string;
+  private _description?: string | null;
   private _releaseDate: Date;
   private _totalQuantity: number;
   private _availableQuantity: number;
@@ -25,6 +27,7 @@ export class Book {
     this._authorId = props.authorId;
     this._title = props.title;
     this._genre = props.genre;
+    this._description = props.description ?? null;
     this._releaseDate = props.releaseDate;
     this._totalQuantity = props.total_quantity;
     this._availableQuantity = props.available_quantity;
@@ -42,6 +45,9 @@ export class Book {
   }
   get genre(): string {
     return this._genre;
+  }
+  get description(): string | null | undefined {
+    return this._description;
   }
   get releaseDate(): Date {
     return this._releaseDate;
@@ -68,6 +74,10 @@ export class Book {
   }
   public updateGenre(genre: string): void {
     this._genre = genre;
+    this._updatedAt = new Date();
+  }
+  public updateDescription(description?: string | null): void {
+    this._description = description ?? null;
     this._updatedAt = new Date();
   }
   public updateReleaseDate(releaseDate: Date): void {

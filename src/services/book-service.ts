@@ -8,6 +8,7 @@ export interface CreateBookDTO {
   authorId: string;
   title: string;
   genre: string;
+  description?: string | null;
   releaseDate: Date;
   total_quantity: number;
   available_quantity?: number;
@@ -17,6 +18,7 @@ export interface UpdateBookDTO {
   authorId?: string | undefined;
   title?: string | undefined;
   genre?: string | undefined;
+  description?: string | null;
   releaseDate?: Date | undefined;
   total_quantity?: number | undefined;
   available_quantity?: number | undefined;
@@ -29,7 +31,7 @@ export class BookService {
   ) {}
 
   public async createBook(data: CreateBookDTO): Promise<Book> {
-    const { authorId, title, genre, releaseDate, total_quantity, available_quantity } = data;
+    const { authorId, title, genre, description, releaseDate, total_quantity, available_quantity } = data;
 
     if (!title || title.trim().length === 0) {
       throw new InvalidParamError('O título do livro é obrigatório.', 'title');
@@ -69,6 +71,7 @@ export class BookService {
       authorId: authorId.trim(),
       title: title.trim(),
       genre: genre.trim(),
+      description: description?.trim() ?? null,
       releaseDate,
       total_quantity,
       available_quantity: finalAvailableQuantity,
@@ -111,6 +114,10 @@ export class BookService {
         throw new InvalidParamError('O gênero do livro não pode ser vazio.', 'genre');
       }
       book.updateGenre(data.genre.trim());
+    }
+
+    if (data.description !== null && data.description !== undefined) {
+      book.updateDescription(data.description?.trim().length > 0 ? data.description.trim() : null);
     }
 
     if (data.authorId !== undefined) {
