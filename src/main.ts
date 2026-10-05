@@ -3,6 +3,7 @@ import { stdin as input, stdout as output } from 'node:process';
 import { connectDatabase, pool } from './infra/database.js';
 import { authorMenu } from './menus/author-menu.js';
 import { bookMenu } from './menus/book-menu.js';
+import { clientMenu } from './menus/client-menu.js';
 
 enum MenuOption {
   AUTHORS = '1',
@@ -61,9 +62,7 @@ async function main(): Promise<void> {
           break;
 
         case MenuOption.CLIENTS:
-          // TODO: Chamar ClientController (A fazer)
-          console.log('\n[TODO] Gerenciamento de Clientes - A fazer.');
-          await waitForKeyPress(terminal);
+          await clientMenu(terminal);
           break;
 
         case MenuOption.LOANS:
