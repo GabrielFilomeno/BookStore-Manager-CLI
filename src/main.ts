@@ -5,6 +5,7 @@ import { authorMenu } from './menus/author-menu.js';
 import { bookMenu } from './menus/book-menu.js';
 import { clientMenu } from './menus/client-menu.js';
 import { loanMenu } from './menus/loan-menu.js';
+import { reportMenu } from './menus/report-menu.js';
 
 enum MenuOption {
   AUTHORS = '1',
@@ -71,9 +72,7 @@ async function main(): Promise<void> {
           break;
 
         case MenuOption.REPORTS:
-          // TODO: Chamar ReportController (A fazer)
-          console.log('\n[TODO] Geração de Relatórios - A fazer.');
-          await waitForKeyPress(terminal);
+          await reportMenu(terminal);
           break;
 
         case MenuOption.EXIT:
